@@ -8,3 +8,6 @@
 *.opensdf
 *.user
 *.ncb
+/XNetIO/Debug
+/XNetIO/ipch
+/XNetIO/x64
