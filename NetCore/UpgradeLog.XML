@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="NetCore">
+</Property><Property Name="Solution File" Value="E:\BoostProject\Asio\NetCore\NetCore.sln">
+</Property><Property Name="Date" Value="2014年6月26日">
+</Property><Property Name="Time" Value="17:44">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="NetCore.sln" Description="File successfully backed up as E:\BoostProject\Asio\NetCore\NetCore.sln.old">
+</Event><Event ErrorLevel="0" Project="NetCore" Source="NetCore.vcproj" Description="Converting project file 'E:\BoostProject\Asio\NetCore\NetCore.vcproj'.">
+</Event><Event ErrorLevel="1" Project="NetCore" Source="NetCore.vcproj" Description="VCWebServiceProxyGeneratorTool is no longer supported. The tool has been removed from your project settings.">
+</Event><Event ErrorLevel="0" Project="NetCore" Source="NetCore.vcproj" Description="Done converting to new project file 'E:\BoostProject\Asio\NetCore\NetCore.vcxproj'.">
+</Event><Event ErrorLevel="3" Project="NetCore" Source="NetCore.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="NetCore.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="NetCore.sln" Description="Converted">
+</Event></UpgradeLog>

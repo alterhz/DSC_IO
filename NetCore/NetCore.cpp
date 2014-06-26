@@ -22,6 +22,18 @@ void INetEngine::Release()
 
 int main(int argc, char* argv[])
 {
+	INetEngine *pNetEngine = INetEngine::CreateNetEngine();
+	if (!pNetEngine)
+	{
+		return -1;
+	}
+
+
+	pNetEngine->SetPort(8000);
+	pNetEngine->Start();
+
+	while(1);
+
 	return 0;
 }
 
