@@ -7,9 +7,9 @@
 class IDispatcher
 {
 public:
-	bool OnAccept(int nSockId);
-	bool OnRecvPackage(int nSockId, const void *pData, unsigned int nLength);
-	bool OnClose(int nSockId);
+	virtual bool OnAccept(int nSockId) = 0;
+	virtual bool OnRecvData(int nSockId, const void *pData, unsigned int nLength) = 0;
+	virtual bool OnClose(int nSockId) = 0;
 
 };
 
@@ -25,6 +25,9 @@ public:
 	virtual bool SetMaxPlayer(unsigned short wMaxPlayer) = 0;
 	virtual bool Start() = 0;
 	virtual bool ShutDown() = 0;
+	virtual bool SendData(const void *pData, unsigned int nLength) = 0;
+	virtual bool Disconnect(int nSockId) = 0;
+	virtual bool DoTick(unsigned long nElapsedTime) = 0;
 
 };
 
