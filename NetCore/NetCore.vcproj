@@ -215,6 +215,14 @@
 				RelativePath=".\NetServer.h"
 				>
 			</File>
+			<File
+				RelativePath=".\TcpSocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpSocket.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="include"

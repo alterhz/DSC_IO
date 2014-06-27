@@ -89,54 +89,38 @@ void CNetServer::ThreadNetRun()
 
 bool CNetServer::DoAccept()
 {
-	//sock_pt pNewSock(new ip::tcp::socket(*m_pIos));
-	TcpSocket *pNewSock = new TcpSocket(*m_pIos);
-
+	sock_pt pNewSock(new ip::tcp::socket(*m_pIos));
+	
 	m_pAcceptor->async_accept(*pNewSock,
 		bind(&CNetServer::OnAccept, this, placeholders::error, pNewSock));
 
 	return true;
 }
 
-void CNetServer::OnAccept( const system::error_code& ec, TcpSocket *pTcpSocket )
+void CNetServer::OnAccept( const system::error_code& ec, sock_pt pSock )
 {
 	if (ec)
 	{
-		delete pTcpSocket;
-		pTcpSocket = NULL;
 		return ;
 	}
+
+	// 再次接收连接
+	DoAccept();
 
 	std::cout << "接收连接" << std::endl;
 
 	static int sTcpSocketIndex = 0;
-	m_mapTcpSocket.insert(std::make_pair(++sTcpSocketIndex, pTcpSocket));
 
-	if (m_pDispatcher)
-	{
-		m_pDispatcher->OnAccept(sTcpSocketIndex);
-	}
+	CTcpSocket_pt pNewTcpSocket(new CTcpSocket());
+	pNewTcpSocket->SetSockId(sTcpSocketIndex);
+	pNewTcpSocket->SetSock(pSock);
+
+	m_mapTcpSocket.insert(std::make_pair(pNewTcpSocket->GetSockId(), pNewTcpSocket));
+
+	// 投递接收连接事件
+
 
 	// 投递异步接收数据
-
-
-	DoAccept();
+	pNewTcpSocket->DoRecv();
 }
 
-bool CNetServer::DoRecv(TcpSocket *pTcpSocket)
-{
-	if (!pTcpSocket)
-	{
-		return false;
-	}
-
-	pTcpSocket->async_read_some(buffer(m_szRecvBuffer), 
-		bind(&CNetServer::OnRecv, this, placeholders::error, pTcpSocket));
-
-	return true;
-}
-
-void CNetServer::OnRecv( const system::error_code& ec, TcpSocket *pTcpSocket )
-{
-
-}

@@ -6,9 +6,12 @@
 
 #include "Header.h"
 #include "INetWork.h"
+#include "TcpSocket.h"
 
 class CNetServer : public INetEngine
 {
+	typedef shared_ptr<CTcpSocket> CTcpSocket_pt;
+
 public:
 	CNetServer();
 	~CNetServer();
@@ -24,17 +27,13 @@ public:
 	virtual bool DoTick(unsigned long nElapsedTime);
 
 private:
-	typedef shared_ptr<ip::tcp::socket> sock_pt;
-	typedef ip::tcp::socket TcpSocket;
+
 
 	void ThreadNetRun();
 
 private:
 	bool DoAccept();
-	void OnAccept(const system::error_code& ec, TcpSocket *pTcpSocket);
-
-	bool DoRecv(TcpSocket *pTcpSocket);
-	void OnRecv(const system::error_code& ec, TcpSocket *pTcpSocket);
+	void OnAccept(const system::error_code& ec, sock_pt pSock);
 
 
 
@@ -45,7 +44,7 @@ private:
 	ip::tcp::acceptor *m_pAcceptor;
 	unsigned short m_wMaxPlayer;
 
-	std::map<int, TcpSocket *> m_mapTcpSocket;
+	std::map<int, CTcpSocket_pt> m_mapTcpSocket;
 
 	char m_szRecvBuffer[0x2000];
 	unsigned int m_nRecvLength;
