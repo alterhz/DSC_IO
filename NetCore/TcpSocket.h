@@ -3,6 +3,9 @@
 #ifndef _TCPSOCKET_
 #define _TCPSOCKET_
 
+#include "Header.h"
+#include "INetWork.h"
+
 typedef shared_ptr<ip::tcp::socket> sock_pt;
 
 class CTcpSocket

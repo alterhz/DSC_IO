@@ -4,8 +4,7 @@
 #ifndef _NETSERVER_
 #define _NETSERVER_
 
-#include "Header.h"
-#include "INetWork.h"
+
 #include "TcpSocket.h"
 
 class CNetServer : public INetEngine
