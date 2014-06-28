@@ -93,12 +93,16 @@
     <ClCompile Include="NetCore.cpp" />
     <ClCompile Include="NetServer.cpp" />
     <ClCompile Include="Header.cpp" />
+    <ClCompile Include="TcpSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LogCore.h" />
+    <ClInclude Include="Queue.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="..\Public\Network\INetWork.h" />
     <ClInclude Include="NetServer.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="TcpSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

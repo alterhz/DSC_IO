@@ -6,6 +6,7 @@
 
 
 #include "TcpSocket.h"
+#include "Queue.h"
 
 class CNetServer : public INetEngine
 {
@@ -26,15 +27,24 @@ public:
 	virtual bool DoTick(unsigned long nElapsedTime);
 
 private:
-
-
 	void ThreadNetRun();
 
 private:
 	bool DoAccept();
 	void OnAccept(const system::error_code& ec, sock_pt pSock);
 
+	// 处理断开连接
+	bool DoClose(int nSockId);
+	void OnClose();
 
+	bool DoTimerRun();
+	void OnTimerRun(const system::error_code& ec);
+
+	void OnDispatchSendData();
+	void OnRunSend();
+	void OnRunClose();
+
+	CTcpSocket_pt FindTcpSocket(int nSockId);
 
 private:
 	IDispatcher *m_pDispatcher;
@@ -43,11 +53,13 @@ private:
 	ip::tcp::acceptor *m_pAcceptor;
 	unsigned short m_wMaxPlayer;
 
-	std::map<int, CTcpSocket_pt> m_mapTcpSocket;
+	deadline_timer *m_pTimerSend;
 
-	char m_szRecvBuffer[0x2000];
-	unsigned int m_nRecvLength;
+	typedef std::map<int, CTcpSocket_pt> TcpSocketList;
+	TcpSocketList m_mapTcpSocket;
 
+	CQueue m_qInIO;
+	CQueue m_qOutIO;
 
 };
 

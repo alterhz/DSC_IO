@@ -36,6 +36,9 @@
     <ClCompile Include="Header.cpp">
       <Filter>include</Filter>
     </ClCompile>
+    <ClCompile Include="TcpSocket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -48,6 +51,15 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Header.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="LogCore.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

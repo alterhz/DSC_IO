@@ -28,11 +28,16 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-
-	pNetEngine->SetPort(8000);
+	pNetEngine->SetPort(9000);
 	pNetEngine->Start();
 
-	while(1);
+	while(1)
+	{
+		system_time &tNow = boost::get_system_time();
+		boost::thread::sleep( tNow + boost::posix_time::microsec(100)); 
+
+		pNetEngine->DoTick(1);
+	}
 
 	return 0;
 }

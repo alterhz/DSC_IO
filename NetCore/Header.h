@@ -18,5 +18,7 @@ using namespace boost::asio;
 
 #include <iostream>
 
+#define ThreadFrameTick		(1000)
+
 // end
 #endif
