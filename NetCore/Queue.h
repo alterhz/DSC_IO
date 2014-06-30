@@ -21,14 +21,14 @@ public:
 	{
 		eMsgType = EMsgType_Null;
 		nSockId = 0;
-		nLength = 0;
+		wLength = 0;
 	}
 	
 public:
 	EMsgType eMsgType;
 	int nSockId;
 	char szData[0x2000];
-	unsigned int nLength;
+	unsigned short wLength;
 };
 
 class CQueue

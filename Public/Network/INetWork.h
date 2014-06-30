@@ -8,7 +8,7 @@ class IDispatcher
 {
 public:
 	virtual bool OnConnected(int nSockId) = 0;
-	virtual bool OnRecvData(int nSockId, const void *pData, unsigned int nLength) = 0;
+	virtual bool OnRecvData(int nSockId, const void *pData, unsigned short nLength) = 0;
 	virtual bool OnClosed(int nSockId) = 0;
 
 };

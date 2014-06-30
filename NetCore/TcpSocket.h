@@ -9,6 +9,11 @@
 
 typedef shared_ptr<ip::tcp::socket> sock_pt;
 
+#define MAX_RECV_BUFFER_LENGTH		(0x2000)
+#define MAX_SEND_BUFFER_LENGTH		(0x2000)
+
+typedef unsigned short USHORT;
+
 class CTcpSocket
 {
 public:
@@ -22,20 +27,27 @@ public:
 
 public:
 	bool DoRecv();
-	void OnRecv(const system::error_code& ec);
-
 	bool DoSend();
-	void OnSend(const system::error_code &ec);
-
 	bool DoClose();
+	
+public:
+	// 事件
+	void OnRecv(const system::error_code& ec, size_t nByteTransferred);
+	void OnSend(const system::error_code &ec, size_t nByteTransferred);
 	void OnClose();
+
+private:
+	// 解析消息包
+	USHORT ReadPacket(const char *pPacketHead, unsigned short wLength);
 
 private:
 	bool m_bClosed;
 	int	m_nSockId;
 	sock_pt m_pSock;
-	char m_szRecvBuffer[0x2000];
-	char m_szSendBuffer[0x2000];
+	char m_szRecvBuffer[MAX_RECV_BUFFER_LENGTH];
+	USHORT m_wHaveRecvLength;
+	char m_szSendBuffer[MAX_SEND_BUFFER_LENGTH];
+	USHORT m_wHaveSendLength;
 
 	CQueue &m_qInIO;
 

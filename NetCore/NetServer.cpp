@@ -103,7 +103,7 @@ bool CNetServer::DoTick( unsigned long nElapsedTime )
 					LOGInfo("接收到消息。");
 					if (m_pDispatcher)
 					{
-						m_pDispatcher->OnRecvData(msgData.nSockId, msgData.szData, msgData.nLength);
+						m_pDispatcher->OnRecvData(msgData.nSockId, msgData.szData, msgData.wLength);
 					}
 				}
 				break;
