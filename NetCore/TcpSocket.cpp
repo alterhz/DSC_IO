@@ -138,40 +138,70 @@ void CTcpSocket::OnClose()
 	m_qInIO.PushMsgData(msgData);
 }
 
-bool CTcpSocket::DoSend()
+//bool CTcpSocket::DoSend()
+//{
+//	// 拷贝数据
+//	std::list<MsgData>::iterator it = m_vtMsgData.begin();
+//	for (; it!=m_vtMsgData.end(); )
+//	{
+//		MsgData &msgData = (*it);
+//
+//		if (MAX_SEND_BUFFER_LENGTH - m_wSendLength >= msgData.wLength)
+//		{
+//			USHORT *pPacketLength = (USHORT *)m_szSendBuffer;
+//			*pPacketLength = msgData.wLength;
+//			m_wSendLength += sizeof(USHORT);
+//			memcpy(m_szSendBuffer + m_wSendLength, msgData.szData, msgData.wLength);
+//			m_wSendLength += msgData.wLength;
+//
+//			it = m_vtMsgData.erase(it);
+//		}
+//		else
+//		{
+//			break;
+//		}
+//	}
+//
+//	if (m_wSendLength > 0)
+//	{
+//		// 发送数据
+//		m_pSock->async_write_some(buffer(m_szSendBuffer, m_wSendLength), 
+//			bind(&CTcpSocket::OnSend, this, placeholders::error, placeholders::bytes_transferred));
+//	}
+//
+//	return true;
+//}
+
+bool CTcpSocket::DoSend( MsgData msgData )
 {
 	if (m_wSendLength > 0)
 	{
+		// 正在发送数据
+		m_listMsgData.push_back(msgData);
+
 		return true;
 	}
-
-	// 拷贝数据
-	std::list<MsgData>::iterator it = m_vtMsgData.begin();
-	for (; it!=m_vtMsgData.end(); )
+	else
 	{
-		MsgData &msgData = (*it);
-
-		if (MAX_SEND_BUFFER_LENGTH - m_wSendLength >= msgData.wLength)
+		// 拷贝数据并发送
+		if (msgData.wLength > MAX_SEND_BUFFER_LENGTH)
 		{
-			memcpy(m_szSendBuffer + m_wSendLength, msgData.szData, msgData.wLength);
-			m_wSendLength += msgData.wLength;
-
-			it = m_vtMsgData.erase(it);
+			LOGError("发送数据长度越界。");
+			return false;
 		}
-		else
-		{
-			break;
-		}
-	}
 
-	if (m_wSendLength > 0)
-	{
+		USHORT *pPacketLength = (USHORT *)m_szSendBuffer;
+		*pPacketLength = msgData.wLength;
+		m_wSendLength += sizeof(USHORT);
+		memcpy(m_szSendBuffer + m_wSendLength, msgData.szData, msgData.wLength);
+		m_wSendLength += msgData.wLength;
+
 		// 发送数据
 		m_pSock->async_write_some(buffer(m_szSendBuffer, m_wSendLength), 
 			bind(&CTcpSocket::OnSend, this, placeholders::error, placeholders::bytes_transferred));
-	}
 
-	return true;
+		return true;
+	}
 }
 
 void CTcpSocket::OnSend( const system::error_code &ec, size_t nByteTransferred )
@@ -186,13 +216,55 @@ void CTcpSocket::OnSend( const system::error_code &ec, size_t nByteTransferred )
 
 	m_wSendLength -= nByteTransferred;
 
-	DoSend();
+	if (m_wSendLength > 0)
+	{
+		LOGError("理论来讲，这里是进不来的！");
+
+		// 理论来讲，这里是进不来的。
+		memcpy(m_szSendBuffer, m_szSendBuffer + nByteTransferred, m_wSendLength);
+
+		// 发送数据
+		m_pSock->async_write_some(buffer(m_szSendBuffer, m_wSendLength), 
+			bind(&CTcpSocket::OnSend, this, placeholders::error, placeholders::bytes_transferred));
+	}
+	else if (0 == m_wSendLength)
+	{
+		// 拷贝数据
+		std::list<MsgData>::iterator it = m_listMsgData.begin();
+		for (; it!=m_listMsgData.end(); )
+		{
+			MsgData &msgData = (*it);
+
+			if (MAX_SEND_BUFFER_LENGTH - m_wSendLength >= msgData.wLength)
+			{
+				USHORT *pPacketLength = (USHORT *)m_szSendBuffer;
+				*pPacketLength = msgData.wLength;
+				m_wSendLength += sizeof(USHORT);
+				memcpy(m_szSendBuffer + m_wSendLength, msgData.szData, msgData.wLength);
+				m_wSendLength += msgData.wLength;
+
+				it = m_listMsgData.erase(it);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		// 发送数据
+		m_pSock->async_write_some(buffer(m_szSendBuffer, m_wSendLength), 
+			bind(&CTcpSocket::OnSend, this, placeholders::error, placeholders::bytes_transferred));
+	}
+	else
+	{
+		LOGError("异常错误！");
+	}
 }
 
-bool CTcpSocket::PushMsgData( MsgData msgData )
-{
-	m_vtMsgData.push_back(msgData);
-
-	return true;
-}
+//bool CTcpSocket::PushMsgData( MsgData msgData )
+//{
+//	m_vtMsgData.push_back(msgData);
+//
+//	return true;
+//}
 

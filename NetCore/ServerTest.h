@@ -11,7 +11,7 @@ class CServerTest : public IDispatcher
 {
 public:
 	virtual bool OnConnected(int nSockId);
-	virtual bool OnRecvData(int nSockId, const void *pData, unsigned short wLength);
+	virtual bool OnRecvData(int nSockId, const char *pRecvData, unsigned short wLength);
 	virtual bool OnClosed(int nSockId);
 
 	void SetNetEngine(INetEngine *pNetEngine) { m_pNetEngine = pNetEngine; }

@@ -5,6 +5,8 @@
 
 #include "Header.h"
 
+#include <assert.h>
+
 class CLogCore
 {
 public:
@@ -22,6 +24,7 @@ public:
 #define LOGError(log) {	\
 	CLogCore logCore;	\
 	logCore.Log("ERROR", log);	\
+	assert(0);	\
 }
 
 #define LOGInfo(log) {	\

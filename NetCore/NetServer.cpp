@@ -229,16 +229,16 @@ void CNetServer::OnTimerRun( const system::error_code& ec )
 	// 先执行事件投递，避免下面逻辑影响逻辑执行次数
 	//LOGDebug("已经过了3秒了...");
 
-	OnDispatchSendData();
-
 	OnRunClose();
 
 	OnRunSend();
+
+	//
 }
 
-void CNetServer::OnDispatchSendData()
+void CNetServer::OnRunSend()
 {
-	while (1)
+	while (true)
 	{
 		MsgData msgData;
 		if (m_qOutIO.PrepareMsgData(msgData))
@@ -266,7 +266,7 @@ void CNetServer::OnDispatchSendData()
 					if (pTcpSocket.get())
 					{
 						// 压入数据
-						pTcpSocket->PushMsgData(msgData);
+						pTcpSocket->DoSend(msgData);
 					}
 					else
 					{
@@ -285,18 +285,18 @@ void CNetServer::OnDispatchSendData()
 	}
 }
 
-void CNetServer::OnRunSend()
-{
-	// 处理发送
-	TcpSocketList::iterator it = m_mapTcpSocket.begin();
-	for (; it!=m_mapTcpSocket.end(); ++it)
-	{
-		CTcpSocket_pt pTcpSocket = it->second;
-
-		// 发送开始
-		pTcpSocket->DoSend();
-	}
-}
+//void CNetServer::OnRunSend()
+//{
+//	// 处理发送
+//	TcpSocketList::iterator it = m_mapTcpSocket.begin();
+//	for (; it!=m_mapTcpSocket.end(); ++it)
+//	{
+//		CTcpSocket_pt pTcpSocket = it->second;
+//
+//		// 发送开始
+//		pTcpSocket->DoSend();
+//	}
+//}
 
 void CNetServer::OnRunClose()
 {

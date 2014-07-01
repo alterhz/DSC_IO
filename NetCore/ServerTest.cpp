@@ -8,9 +8,10 @@ bool CServerTest::OnConnected( int nSockId )
 	return true;
 }
 
-bool CServerTest::OnRecvData( int nSockId, const void *pData, unsigned short wLength )
+bool CServerTest::OnRecvData( int nSockId, const char *pRecvData, unsigned short wLength )
 {
 	LOGDebug("[main]接收socket数据。");
+	LOGDebug(pRecvData);
 
 	// 回发数据测试。
 	char szSend[0x2000] = "very good!";

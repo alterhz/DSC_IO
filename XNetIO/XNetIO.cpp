@@ -100,6 +100,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		char szRecvBuffer[0x2000] = {0};
 		sock.read_some(buffer(szRecvBuffer));
 
+		std::cout << (szRecvBuffer+sizeof(unsigned short)) << std::endl;
 		std::cout << szRecvBuffer << std::endl;
 
 		ios.run_one();

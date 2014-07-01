@@ -40,7 +40,7 @@ private:
 	bool DoTimerRun();
 	void OnTimerRun(const system::error_code& ec);
 
-	void OnDispatchSendData();
+	//void OnDispatchSendData();
 	void OnRunSend();
 	void OnRunClose();
 
