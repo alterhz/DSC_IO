@@ -43,18 +43,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	// 第一个包
 	char *pPacketHead = (szSendBuffer + wSendLength);
 	unsigned short *pPacketLength = (unsigned short *)pPacketHead;
-	*pPacketLength = sizeof("hello world");
-	memcpy(pPacketHead+sizeof(unsigned short), pPacketHead, sizeof("hello world")+1);
+	*pPacketLength = strlen("hello world") + 1;
+	memcpy(pPacketHead+sizeof(unsigned short), "hello world", strlen("hello world")+1);
 
-	wSendLength += sizeof(unsigned short) + sizeof("hello world") + 1;
+	wSendLength += sizeof(unsigned short) + strlen("hello world") + 1;
 
 	// 第二个包
 	pPacketHead = (szSendBuffer + wSendLength);
 	pPacketLength = (unsigned short *)pPacketHead;
-	*pPacketLength = sizeof("good bye");
-	memcpy(pPacketHead+sizeof(unsigned short), pPacketHead, sizeof("good bye")+1);
+	*pPacketLength = strlen("good bye") + 1;
+	memcpy(pPacketHead+sizeof(unsigned short), "good bye", strlen("good bye")+1);
 
-	wSendLength += sizeof(unsigned short) + sizeof("good bye") + 1;
+	wSendLength += sizeof(unsigned short) + strlen("good bye") + 1;
 
 
 	unsigned short wHaveSendLength = 0;
@@ -63,18 +63,28 @@ int _tmain(int argc, _TCHAR* argv[])
 	sock.write_some(buffer(pSendData, 1));
 	wHaveSendLength += 1;
 
-	ios.run_one();
+	for (int i=0; i<10; ++i)
+	{
+		ios.run_one();
+	}
+	
 	
 	pSendData = szSendBuffer + wHaveSendLength;
 	sock.write_some(buffer(pSendData, 5));
 	wHaveSendLength += 5;
 
-	ios.run_one();
+	for (int i=0; i<10; ++i)
+	{
+		ios.run_one();
+	}
 
 	pSendData = szSendBuffer + wHaveSendLength;
 	sock.write_some(buffer(pSendData, wSendLength-wHaveSendLength));
 
-	ios.run_one();
+	for (int i=0; i<10; ++i)
+	{
+		ios.run_one();
+	}
 
 	return 0;
 }

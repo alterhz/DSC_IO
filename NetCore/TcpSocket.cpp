@@ -53,7 +53,7 @@ void CTcpSocket::OnRecv( const system::error_code& ec, size_t nByteTransferred )
 	// 黏包解析
 	USHORT wReadLength = 0;	//解析长度修改都是完整消息包
 
-	while ((m_wHaveRecvLength-wReadLength) > sizeof(USHORT))
+	while (true)
 	{
 		const char *pPacketHead = m_szRecvBuffer + wReadLength;
 		USHORT wRemainLength = m_wHaveRecvLength - wReadLength;
@@ -65,7 +65,8 @@ void CTcpSocket::OnRecv( const system::error_code& ec, size_t nByteTransferred )
 		}
 		else
 		{
-			if (wRemainLength > 0)
+			if ((wRemainLength > 0) 
+				&& (wRemainLength != m_wHaveRecvLength))
 			{
 				memcpy(m_szRecvBuffer, m_szRecvBuffer+wReadLength, wRemainLength);
 			}

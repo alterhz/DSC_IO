@@ -295,6 +295,8 @@ CNetServer::CTcpSocket_pt CNetServer::FindTcpSocket( int nSockId )
 		return it->second;
 	}
 
-	return NULL;
+	CTcpSocket *p = NULL;
+
+	return CTcpSocket_pt(p);
 }
 
