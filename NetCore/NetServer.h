@@ -22,7 +22,7 @@ public:
 	virtual bool SetMaxPlayer(unsigned short wMaxPlayer);
 	virtual bool Start();
 	virtual bool ShutDown();
-	virtual bool SendData(const void *pData, unsigned int nLength);
+	virtual bool SendData(int nSockId, const void *pData, unsigned short wLength);
 	virtual bool Disconnect(int nSockId);
 	virtual bool DoTick(unsigned long nElapsedTime);
 

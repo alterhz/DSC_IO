@@ -39,6 +39,9 @@
     <ClCompile Include="TcpSocket.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="ServerTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Queue.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerTest.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

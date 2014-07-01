@@ -2,7 +2,7 @@
 //
 
 #include "NetServer.h"
-
+#include "ServerTest.h"
 
 
 INetEngine * INetEngine::CreateNetEngine()
@@ -22,12 +22,17 @@ void INetEngine::Release()
 
 int main(int argc, char* argv[])
 {
+	CServerTest *pServerTest = new CServerTest;
+
 	INetEngine *pNetEngine = INetEngine::CreateNetEngine();
 	if (!pNetEngine)
 	{
 		return -1;
 	}
 
+	pServerTest->SetNetEngine(pNetEngine);
+
+	pNetEngine->RegDispatcher(pServerTest);
 	pNetEngine->SetPort(9000);
 	pNetEngine->Start();
 

@@ -79,10 +79,29 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	pSendData = szSendBuffer + wHaveSendLength;
+	sock.write_some(buffer(pSendData, 10));
+	wHaveSendLength += 10;
+
+	for (int i=0; i<10; ++i)
+	{
+		ios.run_one();
+	}
+
+	pSendData = szSendBuffer + wHaveSendLength;
 	sock.write_some(buffer(pSendData, wSendLength-wHaveSendLength));
 
 	for (int i=0; i<10; ++i)
 	{
+		ios.run_one();
+	}
+
+	while (1)
+	{
+		char szRecvBuffer[0x2000] = {0};
+		sock.read_some(buffer(szRecvBuffer));
+
+		std::cout << szRecvBuffer << std::endl;
+
 		ios.run_one();
 	}
 

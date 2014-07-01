@@ -6,7 +6,7 @@ CTcpSocket::CTcpSocket(CQueue &q) : m_qInIO(q)
 	m_bClosed = false;
 	m_nSockId = 0;
 	m_wHaveRecvLength = 0;
-	m_wHaveSendLength = 0;
+	m_wSendLength = 0;
 }
 
 CTcpSocket::~CTcpSocket()
@@ -14,13 +14,13 @@ CTcpSocket::~CTcpSocket()
 	m_bClosed = false;
 	m_nSockId = 0;
 	m_wHaveRecvLength = 0;
-	m_wHaveSendLength = 0;
+	m_wSendLength = 0;
 }
 
 bool CTcpSocket::DoRecv()
 {
 	char *pRecvBuffer = m_szRecvBuffer + m_wHaveRecvLength;
-	USHORT wFreeRecvLength = MAX_RECV_BUFFER_LENGTH-m_wHaveRecvLength;
+	USHORT wFreeRecvLength = MAX_RECV_BUFFER_LENGTH - m_wHaveRecvLength;
 
 	if (0 == wFreeRecvLength)
 	{
@@ -140,15 +140,34 @@ void CTcpSocket::OnClose()
 
 bool CTcpSocket::DoSend()
 {
-	// 检查是否有待发送数据
-	bool bNeedSend = false;
+	if (m_wSendLength > 0)
+	{
+		return true;
+	}
 
+	// 拷贝数据
+	std::list<MsgData>::iterator it = m_vtMsgData.begin();
+	for (; it!=m_vtMsgData.end(); )
+	{
+		MsgData &msgData = (*it);
 
+		if (MAX_SEND_BUFFER_LENGTH - m_wSendLength >= msgData.wLength)
+		{
+			memcpy(m_szSendBuffer + m_wSendLength, msgData.szData, msgData.wLength);
+			m_wSendLength += msgData.wLength;
 
-	if (bNeedSend)
+			it = m_vtMsgData.erase(it);
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if (m_wSendLength > 0)
 	{
 		// 发送数据
-		m_pSock->async_write_some(buffer(m_szSendBuffer), 
+		m_pSock->async_write_some(buffer(m_szSendBuffer, m_wSendLength), 
 			bind(&CTcpSocket::OnSend, this, placeholders::error, placeholders::bytes_transferred));
 	}
 
@@ -165,7 +184,15 @@ void CTcpSocket::OnSend( const system::error_code &ec, size_t nByteTransferred )
 		return ;
 	}
 
+	m_wSendLength -= nByteTransferred;
 
 	DoSend();
+}
+
+bool CTcpSocket::PushMsgData( MsgData msgData )
+{
+	m_vtMsgData.push_back(msgData);
+
+	return true;
 }
 

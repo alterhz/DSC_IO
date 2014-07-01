@@ -54,7 +54,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\;..\Public\Network;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\Public\Network;E:\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -93,11 +93,13 @@
     <ClCompile Include="NetCore.cpp" />
     <ClCompile Include="NetServer.cpp" />
     <ClCompile Include="Header.cpp" />
+    <ClCompile Include="ServerTest.cpp" />
     <ClCompile Include="TcpSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogCore.h" />
     <ClInclude Include="Queue.h" />
+    <ClInclude Include="ServerTest.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="..\Public\Network\INetWork.h" />
     <ClInclude Include="NetServer.h" />

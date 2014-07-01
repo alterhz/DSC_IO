@@ -61,13 +61,29 @@ bool CNetServer::ShutDown()
 	return true;
 }
 
-bool CNetServer::SendData( const void *pData, unsigned int nLength )
+bool CNetServer::SendData( int nSockId, const void *pData, unsigned short wLength )
 {
+	// 接收数据
+	MsgData msgData;
+	msgData.eMsgType = MsgData::EMsgType_Message;
+	msgData.nSockId = nSockId;
+	memcpy(msgData.szData, pData, wLength);
+	msgData.wLength = wLength;
+
+	m_qOutIO.PushMsgData(msgData);
+
 	return true;
 }
 
 bool CNetServer::Disconnect( int nSockId )
 {
+	// 接收数据
+	MsgData msgData;
+	msgData.eMsgType = MsgData::EMsgType_Closed;
+	msgData.nSockId = nSockId;
+
+	m_qOutIO.PushMsgData(msgData);
+
 	return true;
 }
 
@@ -166,6 +182,7 @@ void CNetServer::OnAccept( const system::error_code& ec, sock_pt pSock )
 	LOGInfo("接收连接");
 
 	static int sTcpSocketIndex = 0;
+	++sTcpSocketIndex;
 
 	CTcpSocket_pt pNewTcpSocket(new CTcpSocket(m_qInIO));
 	pNewTcpSocket->SetSockId(sTcpSocketIndex);
@@ -210,7 +227,9 @@ void CNetServer::OnTimerRun( const system::error_code& ec )
 	DoTimerRun();
 
 	// 先执行事件投递，避免下面逻辑影响逻辑执行次数
-	LOGInfo("已经过了3秒了...");
+	//LOGDebug("已经过了3秒了...");
+
+	OnDispatchSendData();
 
 	OnRunClose();
 
@@ -235,6 +254,10 @@ void CNetServer::OnDispatchSendData()
 					{
 						pTcpSocket->DoClose();
 					}
+					else
+					{
+						LOGDebug("没有找到socket对象。");
+					}
 				}
 				break;
 			case MsgData::EMsgType_Message:
@@ -243,13 +266,21 @@ void CNetServer::OnDispatchSendData()
 					if (pTcpSocket.get())
 					{
 						// 压入数据
-
+						pTcpSocket->PushMsgData(msgData);
+					}
+					else
+					{
+						LOGDebug("没有找到socket对象。");
 					}
 				}
 				break;
 			}
 
 			m_qOutIO.RemoveFrontMsgData();
+		}
+		else
+		{
+			break;
 		}
 	}
 }

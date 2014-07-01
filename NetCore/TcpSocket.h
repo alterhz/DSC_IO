@@ -25,6 +25,8 @@ public:
 	int GetSockId() const { return m_nSockId; }
 	bool IsClosed() const { return m_bClosed; }
 
+	bool PushMsgData(MsgData msgData);
+
 public:
 	bool DoRecv();
 	bool DoSend();
@@ -47,7 +49,9 @@ private:
 	char m_szRecvBuffer[MAX_RECV_BUFFER_LENGTH];
 	USHORT m_wHaveRecvLength;
 	char m_szSendBuffer[MAX_SEND_BUFFER_LENGTH];
-	USHORT m_wHaveSendLength;
+	USHORT m_wSendLength;
+
+	std::list<MsgData> m_vtMsgData;
 
 	CQueue &m_qInIO;
 
